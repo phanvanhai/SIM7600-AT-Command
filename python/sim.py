@@ -55,7 +55,8 @@ def _at_send(command,back,timeout, step_check = 0.01):
 
     rec_buff = ''
     if len(command):
-        ser.flushInput()         
+        ser.flushInput()
+        if debug: print(command)
         ser.write((command+'\r\n').encode())
             
     i = 0
@@ -78,7 +79,17 @@ def _at_send(command,back,timeout, step_check = 0.01):
         if debug: print(command + ' no responce')
         return '', False
 
-def _check_service():    
+def _check_service():
+    # Check AT
+    _, ok = _at_send('AT','OK', 1)
+    if not ok:
+        return False
+
+    # Echo mode off
+    _, ok = _at_send('ATE0','OK', 1)
+    if not ok:
+        return False
+
     # SIM Card Status
     _, ok = _at_send('AT+CPIN?','READY', 1)
     if not ok:
@@ -96,7 +107,7 @@ def _check_service():
     _at_send('AT+CGREG?','+CGREG: 0,1', 1)
     if not ok:
         return False
-    
+
     # End the previous http session if any
     _at_send('AT+HTTPTERM', 'OK', 120)
     return True

@@ -23,7 +23,7 @@ POWER_KEY = 6
 
 # ---------------------- MAIN ---------------------
 # init SIM
-sim.power_on(POWER_KEY)
+# sim.power_on(POWER_KEY)
 ok = sim.at_init(SIM_SERIAL_PORT, SIM_SERIAL_BAUD, Debug)
 if not ok:
     print('SIM AT init error')
@@ -41,15 +41,14 @@ try:
         if time_sim != '':
             if Debug: print('Time:' + time_sim)
         
-        time.sleep(2)
-        # Get GPS
+        # time.sleep(2)
+        # Get GPS            
         gps, ok = sim.gps_get_data()
         if ok:
             if Debug: print('GPS:' + gps)
         else:
-            if Debug: print('GPS not ready')
-        
-        time.sleep(2)
+            if Debug: print('GPS not ready')        
+        # time.sleep(2)
         # POST HTTP
         if Debug:
             print('Send data to Server:' + URL)
@@ -58,7 +57,7 @@ try:
         if not ok:
             if Debug: print('Error send data to Server')        
     
-except KeyboardInterrupt:    
+except KeyboardInterrupt:
     main_is_run = False
     sim.gps_stop()
     sim.at_close()
